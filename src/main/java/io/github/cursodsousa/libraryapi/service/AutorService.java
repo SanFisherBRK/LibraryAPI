@@ -19,6 +19,8 @@ public class AutorService {
         this.autorRepository = autorRepository;
     }
 
+//====================================================================================================================
+
     @Transactional
     public AutorResponseDto salvar(AutorRequestDto dto){
         Autor autor = new Autor();
@@ -30,6 +32,8 @@ public class AutorService {
 
         return new AutorResponseDto(autorSalvo);
     }
+
+//====================================================================================================================
 
     @Transactional
     public AutorResponseDto atualizar(UUID id, @Valid AutorRequestDto dto) {
@@ -45,4 +49,12 @@ public class AutorService {
         return new AutorResponseDto(autorAtualizado);
     }
 
+//====================================================================================================================
+    public void delete(UUID id){
+
+        Autor autor = autorRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Autor com ID \" + id + \" não encontrado."));
+        autorRepository.delete(autor);
+    }
+//====================================================================================================================
 }
