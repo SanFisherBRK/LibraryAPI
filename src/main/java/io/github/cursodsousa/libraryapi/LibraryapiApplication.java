@@ -1,11 +1,7 @@
 package io.github.cursodsousa.libraryapi;
 
-import io.github.cursodsousa.libraryapi.model.Autor;
-import io.github.cursodsousa.libraryapi.repository.AutorRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.time.LocalDate;
 
 @SpringBootApplication
 public class LibraryapiApplication {
