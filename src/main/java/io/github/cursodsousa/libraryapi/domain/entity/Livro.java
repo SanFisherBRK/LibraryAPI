@@ -1,5 +1,7 @@
-package io.github.cursodsousa.libraryapi.model;
+package io.github.cursodsousa.libraryapi.domain.entity;
 
+import io.github.cursodsousa.libraryapi.domain.entity.Autor;
+import io.github.cursodsousa.libraryapi.domain.enums.GeneroLivro;
 import jakarta.persistence.*;
 import lombok.Data;
 

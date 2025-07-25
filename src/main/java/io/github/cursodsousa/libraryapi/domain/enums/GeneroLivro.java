@@ -1,4 +1,4 @@
-package io.github.cursodsousa.libraryapi.model;
+package io.github.cursodsousa.libraryapi.domain.enums;
 
 public enum GeneroLivro {
     FICCAO,
