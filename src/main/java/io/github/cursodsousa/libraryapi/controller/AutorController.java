@@ -4,6 +4,7 @@ import io.github.cursodsousa.libraryapi.domain.dto.requestDto.AutorRequestDto;
 import io.github.cursodsousa.libraryapi.domain.dto.responseDto.AutorResponseDto;
 import io.github.cursodsousa.libraryapi.service.AutorService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class AutorController {
     }
 
     @GetMapping
-    public AutorResponseDto salvar(@Valid @RequestBody AutorRequestDto dto){
-        return autorService.salvar(dto);
+    public ResponseEntity<AutorResponseDto> salvar(@Valid @RequestBody AutorRequestDto dto){
+        return ResponseEntity.ok(autorService.salvar(dto));
     }
 }
