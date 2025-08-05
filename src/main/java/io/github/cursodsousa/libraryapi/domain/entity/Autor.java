@@ -2,6 +2,7 @@ package io.github.cursodsousa.libraryapi.domain.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,8 +29,9 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-    //@OneToMany(mappedBy = "autor")
-    @Transient
+    //Ative essa linha se quiser usar o metodo salvar autor junto com o livro
+    //@OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "autor")
     private List<Livro> livros;
 
     public UUID getId() {
