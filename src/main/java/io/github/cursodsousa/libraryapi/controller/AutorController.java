@@ -1,6 +1,7 @@
 package io.github.cursodsousa.libraryapi.controller;
 
 import io.github.cursodsousa.libraryapi.domain.dto.requestDto.AutorRequestDto;
+import io.github.cursodsousa.libraryapi.domain.dto.requestDto.LivroRequestDto;
 import io.github.cursodsousa.libraryapi.domain.dto.responseDto.AutorResponseDto;
 import io.github.cursodsousa.libraryapi.service.AutorService;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ public class AutorController {
     }
 
 //==================================================================================================================
-    @GetMapping
+    @PostMapping
     public ResponseEntity<AutorResponseDto> salvar(@Valid @RequestBody AutorRequestDto dto){
         return ResponseEntity.ok(autorService.salvar(dto));
     }
@@ -43,4 +44,8 @@ public class AutorController {
     }
 
 //==================================================================================================================
+    @PostMapping("/salvarAutorComLivro")
+    public ResponseEntity<AutorResponseDto> salvarAutorComLivro(@Valid @RequestBody AutorRequestDto dtoAutor){
+        return ResponseEntity.ok(autorService.salvarAutorComLivros(dtoAutor));
+    }
 }

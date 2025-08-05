@@ -1,45 +1,37 @@
-package io.github.cursodsousa.libraryapi.domain.entity;
+package io.github.cursodsousa.libraryapi.domain.dto.responseDto;
 
 import io.github.cursodsousa.libraryapi.domain.entity.Autor;
+import io.github.cursodsousa.libraryapi.domain.entity.Livro;
 import io.github.cursodsousa.libraryapi.domain.enums.GeneroLivro;
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Entity
-@Table(name = "livro")
-public class Livro {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
+public class LivroResponseDto {
     private UUID id;
-
-    @Column(name = "isbn", length = 20, nullable = false)
     private String isbn;
-
-    @Column(name = "titulo", length = 150, nullable = false)
     private String titulo;
-
-    @Column(name = "data_publicacao")
     private LocalDate dataPublicacao;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "genero", length = 30, nullable = false)
     private GeneroLivro genero;
-
-    @Column(name = "preco", precision = 18, scale = 2)
     private BigDecimal preco;
-    //private Double preco;
-
-
-    @ManyToOne
-    @JoinColumn(name = "id_autor")
     private Autor autor;
+
+    public LivroResponseDto() {
+    }
+
+    public LivroResponseDto(Livro livro) {
+        this.id = livro.getId();
+        this.isbn = livro.getIsbn();
+        this.titulo = livro.getTitulo();
+        this.dataPublicacao = livro.getDataPublicacao();
+        this.genero = livro.getGenero();
+        this.preco = livro.getPreco();
+        this.autor = livro.getAutor();
+    }
 
     public UUID getId() {
         return id;

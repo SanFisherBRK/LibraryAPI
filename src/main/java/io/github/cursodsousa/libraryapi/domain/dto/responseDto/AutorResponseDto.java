@@ -1,10 +1,11 @@
 package io.github.cursodsousa.libraryapi.domain.dto.responseDto;
 
 import io.github.cursodsousa.libraryapi.domain.entity.Autor;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import io.github.cursodsousa.libraryapi.domain.entity.Livro;
 
 import java.time.LocalDate;
+
+import java.util.List;
 import java.util.UUID;
 
 public class AutorResponseDto {
@@ -13,6 +14,10 @@ public class AutorResponseDto {
     private String nome;
     private LocalDate dataNascimento;
     private String nacionalidade;
+    private List<LivroResponseDto> livros;
+
+    public AutorResponseDto() {
+    }
 
     public AutorResponseDto(Autor autor) {
         this.id = autor.getId();
@@ -51,5 +56,13 @@ public class AutorResponseDto {
 
     public void setNacionalidade(String nacionalidade) {
         this.nacionalidade = nacionalidade;
+    }
+
+    public List<LivroResponseDto> getLivros() {
+        return livros;
+    }
+
+    public void setLivros(List<LivroResponseDto> livros) {
+        this.livros = livros;
     }
 }
