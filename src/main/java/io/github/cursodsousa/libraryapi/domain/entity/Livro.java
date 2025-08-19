@@ -6,10 +6,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+
 
 @Entity
 @Table(name = "livro")
@@ -37,7 +39,7 @@ public class Livro {
     //private Double preco;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_autor")
     private Autor autor;
 
@@ -95,5 +97,17 @@ public class Livro {
 
     public void setAutor(Autor autor) {
         this.autor = autor;
+    }
+
+    @Override
+    public String toString() {
+        return "Livro{" +
+                "id=" + id +
+                ", isbn='" + isbn + '\'' +
+                ", titulo='" + titulo + '\'' +
+                ", dataPublicacao=" + dataPublicacao +
+                ", genero=" + genero +
+                ", preco=" + preco +
+                '}';
     }
 }

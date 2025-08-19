@@ -12,42 +12,41 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.UUID;
 
 @SpringBootTest
 class LivroRepositoryTest {
-Scanner sc = new Scanner(System.in);
+
+    @Autowired
+    LivroRepository repository;
+
     @Autowired
     AutorRepository autorRepository;
 
-    @Autowired
-    LivroRepository livroRepository;
-
+    //================================================================================================================
     @Test
-    void salvaTest(){
+    void salvarTest(){
         Livro livro = new Livro();
         livro.setIsbn("90887-84874");
-        System.out.print("Digite o preço: ");
         livro.setPreco(BigDecimal.valueOf(100));
         livro.setGenero(GeneroLivro.FICCAO);
-        livro.setTitulo("UFO");
+        livro.setTitulo("Outro Livro");
         livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
 
+        Autor autor = autorRepository
+                .findById(UUID.fromString("76e7c418-ccf9-4e2a-af20-c28b9e50ab55"))
+                .orElse(null);
 
-        Autor autorExist = autorRepository.findById(UUID.fromString("8bf7e127-7f8c-4f36-9494-69060aa02eee")).orElse(null);
-        livro.setAutor(autorExist);
+        livro.setAutor(autor);
 
-        livroRepository.save(livro);
+        repository.save(livro);
     }
-
-//=============================================================================================================================
-
-    //Salvando o autor e o livro de uma só vez
+    //================================================================================================================
     @Test
     void salvarAutorELivroTest(){
-        // Cria um novo livro
         Livro livro = new Livro();
         livro.setIsbn("90887-84874");
         livro.setPreco(BigDecimal.valueOf(100));
@@ -55,26 +54,20 @@ Scanner sc = new Scanner(System.in);
         livro.setTitulo("Terceiro Livro");
         livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
 
-        // Cria um novo autor e o salva
         Autor autor = new Autor();
         autor.setNome("José");
         autor.setNacionalidade("Brasileira");
         autor.setDataNascimento(LocalDate.of(1951, 1, 31));
+
         autorRepository.save(autor);
 
-        // Associa o autor recém-criado ao livro
         livro.setAutor(autor);
 
-        // Persiste o livro no banco
-        livroRepository.save(livro);
+        repository.save(livro);
     }
-//=============================================================================================================================
-
-    //Usando "Cascade" para salvar o livro e o autor de modo automático
+    //================================================================================================================
     @Test
     void salvarCascadeTest(){
-        // Cria um livro e um autor (sem salvar o autor manualmente)
-        // Isso testa o comportamento de "cascade persist" se estiver configurado na entidade Livro
         Livro livro = new Livro();
         livro.setIsbn("90887-84874");
         livro.setPreco(BigDecimal.valueOf(100));
@@ -89,60 +82,104 @@ Scanner sc = new Scanner(System.in);
 
         livro.setAutor(autor);
 
-        // Testa se o autor é salvo automaticamente via cascade
-        livroRepository.save(livro);
+        repository.save(livro);
     }
-
-//=============================================================================================================================
-
-    //
+    //================================================================================================================
     @Test
     void atualizarAutorDoLivro(){
-        // Atualiza o autor de um livro existente no banco
         UUID id = UUID.fromString("cfbc87ce-5932-4792-bff0-78ef5973861b");
-        var livroParaAtualizar = livroRepository.findById(id).orElse(null);
+        var livroParaAtualizar = repository.findById(id).orElse(null);
 
-        // Busca outro autor para substituir
         UUID idAutor = UUID.fromString("76e7c418-ccf9-4e2a-af20-c28b9e50ab55");
         Autor maria = autorRepository.findById(idAutor).orElse(null);
 
-        // Atualiza e salva novamente
         livroParaAtualizar.setAutor(maria);
-        livroRepository.save(livroParaAtualizar);
+
+        repository.save(livroParaAtualizar);
     }
-
-//=============================================================================================================================
-
+    //================================================================================================================
     @Test
     void deletar(){
-        // Remove um livro do banco de dados pelo ID
         UUID id = UUID.fromString("cfbc87ce-5932-4792-bff0-78ef5973861b");
-        livroRepository.deleteById(id);
+        repository.deleteById(id);
     }
-//=============================================================================================================================
-
+    //================================================================================================================
     @Test
     void deletarCascade(){
-        // Tenta deletar um livro e verifica se o autor também será removido
-        // Isso depende do comportamento de "cascade delete" ou configurações de FK no banco
         UUID id = UUID.fromString("22238c02-8118-45ba-a9f0-202dfc3acc67");
-        livroRepository.deleteById(id);
+        repository.deleteById(id);
     }
-//=============================================================================================================================
-
-    //Buscar um livro e trazer o autor junto
+    //================================================================================================================
     @Test
     @Transactional
     void buscarLivroTest(){
-        UUID id = UUID.fromString("db0362e6-6058-4162-85a2-6ce21b40c2b6");
-        Livro livro = livroRepository.findById(id).orElse(null);
-
-        System.out.println("Livro");
-        assert livro != null;
+        UUID id = UUID.fromString("daed83b3-65fd-49eb-9400-cbc0af13059d");
+        Livro livro = repository.findById(id).orElse(null);
+        System.out.println("Livro:");
         System.out.println(livro.getTitulo());
 
-        System.out.println("Autor");
-        System.out.println(livro.getAutor().getNome());
+//        System.out.println("Autor:");
+//        System.out.println(livro.getAutor().getNome());
     }
-//=============================================================================================================================
+    //================================================================================================================
+    @Test
+    void pesquisaPorTituloTest(){
+        List<Livro> lista = repository.findByTitulo("O roubo da casa assombrada");
+        lista.forEach(System.out::println);
+    }
+
+    //================================================================================================================
+    @Test
+    void pesquisaPorISBNTest(){
+        List<Livro> lista = repository.findByIsbn("20847-84874");
+        lista.forEach(System.out::println);
+    }
+
+    //================================================================================================================
+    @Test
+    void pesquisaPorTituloEPrecoTest(){
+        var preco = BigDecimal.valueOf(204.00);
+        var tituloPesquisa = "O roubo da casa assombrada";
+
+        List<Livro> lista = repository.findByTituloAndPreco(tituloPesquisa, preco);
+        lista.forEach(System.out::println);
+    }
+
+    //================================================================================================================
+
+    // Método JPQL @Query
+    @Test
+    void listarLivrosComQueryJPQL(){
+        var resultado = repository.listarTodosOrdenadoPorTituloEpreco();
+        resultado.forEach(System.out::println);
+    }
+
+    //================================================================================================================
+
+    // Método JPQL @Query
+    @Test
+    void listarAutoresDosLivrosJPQL(){
+        var resultado = repository.listarAutoresDosLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    //================================================================================================================
+
+    // Método JPQL @Query
+
+    @Test
+    void listarTitulosNaoRepetidosDosLivrosJPQL(){
+        var resultado = repository.listarNomesDiferentesLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    //================================================================================================================
+
+    // Método JPQL @Query
+
+    @Test
+    void listarGenerosDeLivrosAutoresBrasileirosJPQL(){
+        var resultado = repository.listarGenerosAutoresBrasileiros();
+        resultado.forEach(System.out::println);
+    }
 }

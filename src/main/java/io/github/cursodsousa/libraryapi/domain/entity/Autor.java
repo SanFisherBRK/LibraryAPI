@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
 
 @Entity
 @Table(name = "autor", schema = "public")
@@ -30,8 +32,8 @@ public class Autor {
     private String nacionalidade;
 
     //Ative essa linha se quiser usar o metodo salvar autor junto com o livro
-    //@OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OneToMany(mappedBy = "autor")
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //@OneToMany(mappedBy = "autor")
     private List<Livro> livros;
 
     public UUID getId() {
@@ -72,5 +74,15 @@ public class Autor {
 
     public void setLivros(List<Livro> livros) {
         this.livros = livros;
+    }
+
+    @Override
+    public String toString() {
+        return "Autor{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", dataNascimento=" + dataNascimento +
+                ", nacionalidade='" + nacionalidade + '\'' +
+                '}';
     }
 }

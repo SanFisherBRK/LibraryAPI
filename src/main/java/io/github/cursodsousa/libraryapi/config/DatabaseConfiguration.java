@@ -22,7 +22,7 @@ public class DatabaseConfiguration {
     String driver;
 
     //===============================================================================================================
-    //DataSource não recmendado para uso em produção
+    //DataSource não recomendado para uso em produção
     //@Bean
     //public DataSource dataSource(){
         //DriverManagerDataSource ds = new DriverManagerDataSource();
